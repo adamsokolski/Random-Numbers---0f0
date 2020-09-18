@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <main class="mainBox">
+      <button class="buttonStart" value="">Start</button>
+      <button class="buttonStop" value="">Stop</button>
+      <div class="box"></div>
+    </main>
+    <script>
+      const bStart = document.querySelector(".buttonStart");
+      const bStop = document.querySelector(".buttonStop");
+      const box = document.querySelector(".box");
+      const mainBox = document.querySelector(".mainBox");
+      const div = document.getElementsByTagName("div");
+
+      function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+
+      async function createNumbers() {
+        // tworzenie 100 divów
+        box.innerHTML = "";
+        for (let i = 1; i <= 100; i++) {
+          let span = document.createElement(`div`);
+          let text = document.createTextNode(`${i}`);
+          span.appendChild(text);
+          box.appendChild(span);
+          await sleep(10);
+        }
+      }
+
+      function generateRandom() {
+        // Generowanie losowego numeru
+        let randomNumber = Math.floor(Math.random() * 100) + 1;
+        return randomNumber;
+      }
+
+      async function changeColor() {
+        let number = generateRandom();
+        console.log(number);
+        div[number].style.backgroundColor = "#0f0";
+        div[number].style.color = "#000";
+        div[number].style.boxShadow = "0px 0px 5px #0f0";
+        await sleep(500);
+        div[number].style.backgroundColor = "#000";
+        div[number].style.color = "#0f0";
+        div[number].style.boxShadow = "none";
+      }
+      let intSetup;
+      function startClicked() {
+        bStart.disabled = true;
+        createNumbers();
+        changeColor();
+        intSetup = setInterval(changeColor, 500);
+      }
+
+      async function stopClicked() {
+        bStart.disabled = false;
+        clearInterval(intSetup);
+        for (let i = 100; i >= 0; i--) {
+          div[i].innerHTML = "";
+          await sleep(10);
+        }
+      }
+
+      bStart.addEventListener("click", () => startClicked());
+      bStop.addEventListener("click", () => stopClicked());
+    </script>
+  </body>
+</html>
